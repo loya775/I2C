@@ -33,11 +33,8 @@
  * @brief   Application entry point.
  */
 #include <stdio.h>
-#include "board.h"
-#include "peripherals.h"
-#include "pin_mux.h"
-#include "clock_config.h"
-#include "MK64F12.h"
+#include "DatatypeDefinitions.h"
+#include "I2C_Driver.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -45,22 +42,16 @@
 /*
  * @brief   Application entry point.
  */
-int main(void) {
-
-  	/* Init board hardware. */
-    BOARD_InitBootPins();
-    BOARD_InitBootClocks();
-    BOARD_InitBootPeripherals();
-  	/* Init FSL debug console. */
-    BOARD_InitDebugConsole();
-
-    printf("Hello World\n");
-
-    /* Force the counter to be placed into memory. */
-    volatile static int i = 0 ;
-    /* Enter an infinite loop, just incrementing a counter. */
-    while(1) {
-        i++ ;
-    }
+int main(void)
+{
+	uint8 Flag1;
+while(TRUE)
+{
+	I2C_init(I2C_0,210000,250);
+	I2C_start();
+	Flag1 = I2C0->C1;
+	I2C_stop();
+	Flag1 = I2C0->C1;
+}
     return 0 ;
 }
