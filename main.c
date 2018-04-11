@@ -33,6 +33,7 @@
  * @brief   Application entry point.
  */
 #include <stdio.h>
+#include "EEPROM.h"
 #include "DatatypeDefinitions.h"
 #include "I2C_Driver.h"
 /* TODO: insert other include files here. */
@@ -44,14 +45,14 @@
  */
 int main(void)
 {
-	uint8 Flag1;
+	uint8 Write;
+	uint8 Value;
 while(TRUE)
 {
+	Write=0x09;
 	I2C_init(I2C_0,210000,250);
-	I2C_start();
-	Flag1 = I2C0->C1;
-	I2C_stop();
-	Flag1 = I2C0->C1;
+	EEPROM_Write(Write);
+	Value = EEPROM_Read();
 }
     return 0 ;
 }
