@@ -8,27 +8,29 @@
 #include "I2C_Driver.h"
 #include "GPIO.h"
 #define MUL 0x1
-#define LOAD_I2Cx 0x3
+#define LOAD_I2Cx 0x03
 uint8 Flag;
 uint8 Busy;
 uint8 Data;
 uint8 ReadData;
+
 void I2C_init(I2C_ChannelType channel, uint32 systemClock, uint8 baudRate)
 {
+	SIM->SCGC4 |= SIM_SCGC4_I2C0_MASK;
+	I2C0->F |= LOAD_I2Cx;
+	I2C0->F |= 1 << I2C_F_MULT_SHIFT;
+	I2C0->C1 |= I2C_C1_IICEN_MASK;
 	GPIO_pinControlRegisterType MUXAlt2 = GPIO_MUX2;
 	GPIO_clockGating(GPIO_B);
 	GPIO_pinControlRegister(GPIO_B,BIT2,&MUXAlt2);
 	GPIO_pinControlRegister(GPIO_B,BIT3,&MUXAlt2);
-	SIM->SCGC4 |= SIM_SCGC4_I2C0_MASK;
-	I2C0->C1 |= I2C_C1_IICEN_MASK;
-	I2C0->A1 |= 0xDEU;
-	I2C0->F |= LOAD_I2Cx;
+
 	return;
 }
 
 uint8 I2C_busy()
 {
-	Busy = (I2C0->S & I2C_S_TCF_MASK) >> I2C_S_TCF_SHIFT;
+	Busy = (I2C0->S & I2C_S_BUSY_MASK) << I2C_S_BUSY_SHIFT;
 	return Busy;
 }
 
@@ -88,13 +90,10 @@ uint8  I2C_read_Byte(void)
 
 uint16 I2C_get_ACK(void)
 {
-	I2C0->S &= I2C_S_RXAK_MASK;
-	return (I2C0->S &= I2C_S_RXAK_MASK);
+	return (I2C0->S & I2C_S_RXAK_MASK);
 }
 
 void I2C_wait(void)
 {
-	while((I2C_busy()))
-	{
-	}
+	while(FALSE == (I2C0->S & I2C_S_TCF_MASK));
 }
