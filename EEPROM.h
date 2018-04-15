@@ -10,8 +10,9 @@
 
 #include "MK64F12.h"
 #include "DataTypeDefinitions.h"
-uint8 EEPROM_Read(void);
 
-void EEPROM_Write(uint8 Variable);
 
+void EEPROM_Read(uint32 *Direccion, uint32 *Bytes);
+void MaxValueNumber(uint8 Value);
+void EEPROM_Write(uint32 *AddressPointer, uint32 *ValuePointer);
 #endif /* EEPROM_H_ */

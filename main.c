@@ -29,30 +29,53 @@
  */
  
 /**
- * @file    I2C.c
+ * @file    Practica_3_I2C.c
  * @brief   Application entry point.
  */
 #include <stdio.h>
-#include "EEPROM.h"
-#include "DatatypeDefinitions.h"
+#include "GPIO.h"
+#include "GlobalFunctions.h"
+#include "DataTypeDefinitions.h"
+#include "MK64F12.h"
+#include "FunctionRotate.h"
+#include "UART.h"/**UART device driver*/
+#include "NVIC.h"/**NVIC device driver*/
+#include "TeraTermWrite.h"
 #include "I2C_Driver.h"
-/* TODO: insert other include files here. */
+#include "RTC.h"
+#define Ano 0x96
+#define Mes 0X03
+#define Dia 0x21
+#define Hora 0x15
+#define Min 0x20
+#define seg 0x95
 
-/* TODO: insert other definitions and declarations here. */
-
-/*
- * @brief   Application entry point.
- */
-int main(void)
-{
-	uint8 Write;
-	uint8 Value;
-while(TRUE)
-{
-	Write=0x09;
+int main(void) {
+	uint8 Selector = 0;
 	I2C_init(I2C_0,210000,250);
-	EEPROM_Write(Write);
-	Value = EEPROM_Read();
-}
-    return 0 ;
+	GPIO_pinControlRegisterType MUXALT = PORT_PCR_MUX(3);
+	/**Enables the clock of PortB in order to configures TX and RX of UART peripheral*/
+	/**Configures the pin coOntrol register of pin16 in PortB as UART RX*/
+	GPIO_pinControlRegister(GPIO_B,BIT16, &MUXALT);
+	/**Configures the pin control register of pin16 in PortB as UART TX*/
+	GPIO_pinControlRegister(GPIO_B,BIT17, &MUXALT);
+	/**Configures UART 0 to transmit/receive at 11520 bauds with a 21 MHz of clock core*/
+	UART_init (UART_0,  21000000, BD_115200);
+	//printf("UART is configured");
+	/**Enables the UART 0 interrupt*/
+	UART0_interruptEnable(UART_0);
+	/**Enables the UART 0 interrupt in the NVIC*/
+	NVIC_enableInterruptAndPriotity(UART0_IRQ, PRIORITY_10);
+	FirstMenu();
+
+	/**Enables interrupts*/
+	EnableInterrupts;
+	setTime_RTC(Hora, Min, seg, FORMAT24, AM);
+	setDate_RTC(Ano, Mes, Dia);
+	while(TRUE)
+	{
+		Selector = InitMenu();
+		Selector -= 49;
+		choose_function(Selector);
+	}
 }
