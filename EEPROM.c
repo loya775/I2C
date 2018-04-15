@@ -9,39 +9,37 @@
 #include "GlobalFunctions.h"
 uint8 EEPROM_Read()
 {
+	delay(5000);
 	uint8 dataFromEEPROM;
-
 	I2C_start();
 
 	I2C_write_Byte(0xA0);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_write_Byte(0x00);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_write_Byte(0x02);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_repeted_Start();
 	I2C_write_Byte(0xA1);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_TX_RX_Mode(FALSE);
 
 	I2C_NACK();
-	delay(800);
-
 	dataFromEEPROM = I2C_read_Byte();
 	I2C_wait();
-	delay(800);
+	delay(100);
 
 	I2C_stop();
 	dataFromEEPROM = I2C_read_Byte();
@@ -55,22 +53,22 @@ void EEPROM_Write(uint8 Variable)
 	I2C_write_Byte(0xA0);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_write_Byte(0x00);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_write_Byte(0x01);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_write_Byte(Variable);
 	I2C_wait();
 	I2C_get_ACK();
-	delay(800);
+	delay(100);
 
 	I2C_stop();
 	return ;
