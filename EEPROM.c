@@ -36,25 +36,30 @@ void EEPROM_Read(uint32 *Direccion, uint32 *Bytes)
 	uint16 DirectionToSend = INITIAL_VALUE;
 	uint32 Multiplier = VALUE_HEX_TO_DEC;
 	uint16 Bite = INITIAL_VALUE;
-
+	/*In this section we use a pointer and we take the values in this direcction*/
 	while(Contador < MAX_OF_MEMORY_HEX)
 	{
 		Preview = *(Direccion+Contador);
+		/*If the value in Direction is between 10 and 16 it means it is already transform in HEX*/
 		if (Preview >= MIN_NUMBER_FOR_HEX && Preview <= MAX_NUMBER_FOR_HEX)
 		{
 
 		}else
 		{
+			/*If not it means is in ascii and we have to rest 48 because 48 is 0 in ascii*/
 			Preview -= OFFSEET_FOR_NUMBER_ASCII;
 		}
+		/*We multiplied for 16 because it in Hex*/
 		DirectionToSend += Preview*Multiplier;
 		Multiplier = Multiplier/DIVIDER_FOR_HEX;
 		Contador += MOVE_ONE_STEP;
 	}
-
+	/*We put in 0 Contador Because we gonna used again*/
 	Contador = INITIAL_VALUE;
+	/*We gonna put in 4096 the multiplier because we gonna used again*/
 	Multiplier = VALUE_HEX_TO_DEC;
 
+	/*We do the same thing we do in the previous block*/
 	while(Contador < MAX_OF_MEMORY_HEX)
 	{
 		Preview = *(Bytes+Contador);
@@ -69,16 +74,21 @@ void EEPROM_Read(uint32 *Direccion, uint32 *Bytes)
 		Multiplier = Multiplier/DIVIDER_FOR_HEX;
 		Contador += MOVE_ONE_STEP;
 	}
-
+	/*We restart the value of contador because we gonna used later*/
 	Contador = INITIAL_VALUE;
 
+	/*We gonna do this block while 'contador' is minor than Bite, that means we gonna read that number of bits in the memory*/
 	while(Contador<Bite)
 	{
+		/*We move the direction we gonna read*/
 		DirectionToSend = DirectionToSend + Contador;
+		/*We get the high part of the direction*/
 		HighDirection = DirectionToSend & HIGH_VALUE_FOR_HEX;
+		/*We get the Low part of the direction*/
 		LowDirection = DirectionToSend & LOW_VALUE_FOR_HEX;
 
 		delay(DELAY_BETWEEN_TRANSMISION);
+		/*In this part of the code we read the memory and we print it in TeraTerm*/
 		I2C_start(I2C_0);
 
 		I2C_write_Byte(A0, I2C_0);
@@ -183,6 +193,7 @@ void EEPROM_Write(uint32 *AddressPointer, uint32 *ValuePointer)
 
 void MaxValueNumber(uint8 Value)
 {
+	/*This function save the max value that we gonna write in memory+*/
 	Max = Value;
 	return;
 }

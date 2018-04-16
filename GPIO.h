@@ -114,7 +114,6 @@ typedef const uint32 GPIO_pinControlRegisterType;
 
  	 \param[in]  portName Port to clear interrupts.
  	 \return if the clear action was execute correctly
- 	 \todo Implement a mechanism to clear interrupts by a specific pin.
  */
 uint8 GPIO_clearIRQStatus(GPIO_portNameType gpio);
 /********************************************************************************************/
@@ -125,7 +124,6 @@ uint8 GPIO_clearIRQStatus(GPIO_portNameType gpio);
 
  	 \param[in]  portName Port to clear interrupts.
  	 \return the status of the isr state variable
- 	 \todo Implement a mechanism to clear interrupts by a specific pin.
  */
 uint8 GPIO_getIRQStatus(GPIO_portNameType gpio);
 
@@ -139,7 +137,6 @@ uint8 GPIO_getIRQStatus(GPIO_portNameType gpio);
 
  	 \param[in]  portName Port to clear interrupts.
  	 \return void
- 	 \todo Implement a mechanism to clear interrupts by a specific pin.
  */
 void GPIO_clearInterrupt(GPIO_portNameType portName);
 
@@ -151,7 +148,6 @@ void GPIO_clearInterrupt(GPIO_portNameType portName);
 
  	 \param[in]  portName Port to clear interrupts.
  	 \return void
- 	 \todo Implement a mechanism to clear interrupts by a specific pin.
  */
 void GPIO_clearInterrupt(GPIO_portNameType portName);
 

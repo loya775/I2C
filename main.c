@@ -75,6 +75,7 @@ int main(void) {
 	setHourFormat_RTC(FORMAT24);
 	setTime_RTC(Hora, Min, seg, FORMAT24, PM);
 	setDate_RTC(Ano, Mes, Dia);
+
 	while(TRUE)
 	{
 		Selector = InitMenu();

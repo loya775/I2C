@@ -21,9 +21,18 @@
 #define MAX_HEX_ASCII 70
 #define MIN_HEX_ASCII 65
 #define MOVE_ONE_STEP 1
+#define TWOPOINTS1 1
+#define TWOPOINTS2 2
+#define TWOPOINTS3 3
+#define TWOPOINTS4 4
+#define FORCOUNTER2 2
 #define INIT_VALUE 0
 #define ENTER_KEY_PRESS 13
 #define MEMORY 20
+#define ASCIIN 110
+#define ASCIIO 111
+#define ASCIIS 115
+#define ASCIII 105
 uint8 SaveValue = 0;
 uint8 Value = 0;
 uint8 CMatrix = 0;
@@ -331,7 +340,7 @@ uint8 InitMenu()
 				FirstMenu();
 			}
 			}
-			UART0_MailBox.flag =0;
+			UART0_MailBox.flag = INIT_VALUE;
 	}
 
 	return Flag;
@@ -350,7 +359,7 @@ uint32 *Uart_setTime_Get(uint8 Max){
 				/**Sends to the PCA the received data in the mailbox*/
 				UART_putChar (UART_0, UART0_MailBox.mailBox);
 				Value = UART0->D;
-				if(TwoPointsCounter == 1 || TwoPointsCounter == 3)
+				if(TwoPointsCounter == TWOPOINTS1 || TwoPointsCounter == TWOPOINTS3)
 				{
 					UART_putString(UART_0,"\033[1C");
 				}
@@ -366,7 +375,7 @@ uint32 *Uart_setTime_Get(uint8 Max){
 				{
 					CMatrix = CMatrix - MOVE_ONE_STEP;
 					Contador = Contador + MOVE_ONE_STEP;
-					if(TwoPointsCounter == 2 || TwoPointsCounter == 4)
+					if(TwoPointsCounter == TWOPOINTS2 || TwoPointsCounter == TWOPOINTS4)
 					{
 						UART_putString(UART_0,"\033[1D");
 					}else{
@@ -403,31 +412,31 @@ uint8 Uart_For_Enter()
 
 uint8 Uart_For_Yes_Or_No()
 {
-	uint8 Counter = 0;
-	uint8 YesOrNo[2] = {0,0};
+	uint8 Counter = INIT_VALUE;
+	uint8 YesOrNo[FORCOUNTER2] = {INIT_VALUE,INIT_VALUE};
 	while(TRUE)
 	{
 	if(UART0_MailBox.flag)
 	{
 		UART_putChar (UART_0, UART0_MailBox.mailBox);
 		YesOrNo[Counter] = UART0->D;
-		Counter += 1;
-		if (Counter == 2 )
+		Counter += MOVE_ONE_STEP;
+		if (Counter == FORCOUNTER2)
 		{
-			if(YesOrNo[0] == 115 && YesOrNo[1] == 105)
+			if(YesOrNo[INIT_VALUE] == ASCIIS && YesOrNo[MOVE_ONE_STEP] == ASCIII)
 			{
 				UART0_MailBox.flag = INIT_VALUE;
 				return TRUE;
-			}else if(YesOrNo[0] == 110 && YesOrNo[1] == 111)
+			}else if(YesOrNo[INIT_VALUE] == ASCIIN && YesOrNo[MOVE_ONE_STEP] == ASCIIO)
 			{
 				UART0_MailBox.flag = INIT_VALUE;
 				return FALSE;
 			}else
 			{
-				Counter -= 2;
+				Counter -= FORCOUNTER2;
 				UART_putString(UART_0,"\033[4;0H");
-				YesOrNo[0] = FALSE;
-				YesOrNo[1] = FALSE;
+				YesOrNo[INIT_VALUE] = FALSE;
+				YesOrNo[MOVE_ONE_STEP] = FALSE;
 			}
 		}
 	UART0_MailBox.flag = INIT_VALUE;

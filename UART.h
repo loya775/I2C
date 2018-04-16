@@ -90,11 +90,71 @@ void UART_putChar (UART_ChannelType uartChannel, uint8 character);
  	 \return void
  */
 void UART_putString(UART_ChannelType uartChannel, sint8* string);
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 This function capture the address in an array to write or read dependying of the menu you are.
+ 	 \param[in] Max Is the number of members in the Array.
+ 	 \return  A pointer who has the direction of the array.
+
+ */
 uint32 *Uart_Writing_Address(uint8 Max);
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 This function capture the text you wanna write in the memory.
+ 	 \param[in] Max Is the number of members in the Array.
+ 	 \return  A pointer who has the direction of the array.
+
+ */
 uint32 *Uart_Text_To_Read(uint8 Max);
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 This function capture the number of bites you wanna write in the memory.
+ 	 \param[in] Max Is the number of members in the Array.
+ 	 \return  A pointer who has the direction of the array.
+
+ */
 uint32 *Uart_Reading_Bytes_Address(uint8 Max);
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 This function printf the init menu and takes a value to call a new function.
+ 	 \return  The number of the function you want to go.
+
+ */
 uint8 InitMenu();
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 This function capture the hour or date you wanna write in the RTC.
+ 	 \param[in] Max Is the number of members in the Array.
+ 	 \return  A pointer who has the direction of the array.
+
+ */
 uint32 *Uart_setTime_Get(uint8 Max);
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 This function waits for an enter in TeraTerm .
+ 	 \return  a 13.
+
+ */
 uint8 Uart_For_Enter();
+/********************************************************************************************/
+/********************************************************************************************/
+/********************************************************************************************/
+/*!
+ 	 \brief	 Waits until the function capture a si or no in ascii.
+ 	 \return  A flag in TRUE or FALSE depending.
+
+ */
 uint8 Uart_For_Yes_Or_No();
 #endif /* UART_H_ */

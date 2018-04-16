@@ -59,7 +59,7 @@ uint8 I2C_busy(I2C_ChannelType channel)
 						Busy = (I2C2->S & I2C_S_BUSY_MASK) << I2C_S_BUSY_SHIFT;
 						break;
 					default:/**If doesn't exist the option*/
-						return;
+						return 0;
 						break;
 					}
 	return Busy;
@@ -256,7 +256,7 @@ uint8  I2C_read_Byte(I2C_ChannelType channel)
 						return ReadData;
 						break;
 					default:/**If doesn't exist the option*/
-						return;
+						return 0;
 						break;
 					}
 }
@@ -273,7 +273,7 @@ uint16 I2C_get_ACK(I2C_ChannelType channel)
 					case I2C_2:/** GPIO C is selected*/
 						return (I2C2->S & I2C_S_RXAK_MASK);
 					default:/**If doesn't exist the option*/
-						return;
+						return 0;
 						break;
 					}
 }

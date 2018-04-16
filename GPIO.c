@@ -29,19 +29,6 @@ void PORTB_IRQHandler()
 
 }
 
-/**void PORTC_IRQHandler(void)
-{
-	Identifier = Keyboard_Debouncer(Identifier);
-	if(Identifier)
-	{
-		GPIO_intrStatusFlag.flagPortC = TRUE;
-		GPIO_clearInterrupt(GPIO_C);
-	}
-	else{
-		GPIO_clearIRQStatus(GPIO_C);
-	}
-}*/
-
 
 uint8 GPIO_getIRQStatus(GPIO_portNameType gpio)
 {
