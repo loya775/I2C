@@ -39,19 +39,27 @@
 #include "GlobalFunctions.h"
 #include "MK64F12.h"
 
+/*These macros are used to make shifts, to multiply variables and set delay values*/
+#define TENS_SHIFT 4
+#define HOUR_SHIFT 6
+#define AMPM_SHIFT 5
+#define TWELVEHOUR 12
+#define CONVERSIONOFFSET 14
+#define DELAYI2C 100
+#define DELAYSTART 5000
+#define TENS 10
+
+/*These macros are used as masks to get individual or several bits from RTC*/
 #define ONES_MASK 0x0F
 #define TENS_MASK 0xF0
 #define ONE_TEN_MASK 0x30
 #define TWELVE_MASK 0x10
-#define TENS_SHIFT 4
-#define HOUR_SHIFT 6
-#define AMPM_SHIFT 5
-#define TENS 10
 #define HOUR_FORMAT_MASK 0x40
 #define PM_MASK 0x20
 #define OSCRUN_MASK 0x20
 #define HIGH_MASK 0x70
 
+/*These macros are used to access specific bytes from the RTC*/
 #define CTRL_BYTE 0x07
 #define YEAR_BYTE 0x06
 #define MTH_BYTE 0x05
@@ -60,36 +68,46 @@
 #define HOUR_BYTE 0x02
 #define MIN_BYTE 0x01
 #define SEC_BYTE 0x00
+
+/*These macros are used to read and write in the RTC*/
 #define READRTC 0xDF
 #define WRITERTC 0XDE
 
+/*dataRTC is the data read from the RTC*/
 static volatile uint8 dataRTC;
+/*ten contains the tens in a read value*/
 static volatile uint8 ten;
+/*one contains the ones in a read value*/
 static volatile uint8 one;
+/*ampm contains whether the 12 hour format is in AM or PM*/
 static volatile uint8 ampm;
+/*setHourResult contains the hour to be set in the RTC*/
 static volatile uint8 setHourResult;
+/*ampmChar contains the 'AM' or 'PM' chars in HEX format*/
 static volatile uint16 ampmChar;
-static volatile uint8 lastHour;
-static uint8 formatFlag;
+
 
 void RTC_initialize(uint8 variable){
+	/*This function initiliazes the RTC by writing in the ST in the seconds byte
+	 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+	 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 
 	I2C_start(I2C_0);
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(SEC_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
-	I2C_write_Byte(variable, I2C_0); //activar el oscilador 0x10000000
+	I2C_write_Byte(variable, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -97,31 +115,35 @@ void RTC_initialize(uint8 variable){
 }
 
 uint8 getSeconds_RTC(void){
-	delay(5000);
+	/*This function reads the RTC seconds by writing the byte to be read and then using a repeated start and
+	 * specifying you are reading the byte previously specified and finally converting that value into a DEC format
+	 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+	 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
+	delay(DELAYSTART);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(SEC_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -133,32 +155,36 @@ uint8 getSeconds_RTC(void){
 }
 
 uint8 getMinutes_RTC(void){
-	delay(5000);
+	/*This function reads the RTC minutes by writing the byte to be read and then using a repeated start and
+	 * specifying you are reading the byte previously specified and finally converting that value into a DEC format
+	 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+	 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
+	delay(DELAYSTART);
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(MIN_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -170,32 +196,38 @@ uint8 getMinutes_RTC(void){
 }
 
 uint8 getHours_RTC(void){
-	delay(5100);
+	/*This function reads the RTC hours by writing the byte to be read and then using a repeated start and
+	 * specifying you are reading the byte previously specified.
+	 * Then it uses a mask to check if the 12/24 format bit is on or off, and finally converts the value
+	 * whether it's a 12 hour format or a 24 hour format
+	 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+	 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
+	delay(DELAYSTART);
 	I2C_TX_RX_Mode(TRUE,I2C_0);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(HOUR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -213,32 +245,36 @@ uint8 getHours_RTC(void){
 }
 
 uint8 getDays_RTC(void){
+	/*This function reads the RTC days by writing the byte to be read and then using a repeated start and
+		 * specifying you are reading the byte previously specified and finally converting that value into a DEC format
+		 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+		 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
 	I2C_TX_RX_Mode(TRUE,I2C_0);
-	delay(5000);
+	delay(DELAYSTART);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(DAY_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -250,32 +286,36 @@ uint8 getDays_RTC(void){
 }
 
 uint8 getMonths_RTC(void){
+	/*This function reads the RTC months by writing the byte to be read and then using a repeated start and
+		 * specifying you are reading the byte previously specified and finally converting that value into a DEC format
+		 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+		 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
 	I2C_TX_RX_Mode(TRUE, I2C_0);
-	delay(5000);
+	delay(DELAYSTART);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(MTH_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -287,32 +327,36 @@ uint8 getMonths_RTC(void){
 }
 
 uint8 getYears_RTC(void){
+	/*This function reads the RTC years by writing the byte to be read and then using a repeated start and
+		 * specifying you are reading the byte previously specified and finally converting that value into a DEC format
+		 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+		 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
 	I2C_TX_RX_Mode(TRUE, I2C_0);
-	delay(5000);
+	delay(DELAYSTART);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(YEAR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE,I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -324,32 +368,38 @@ uint8 getYears_RTC(void){
 }
 
 uint16 getAMPM_RTC(void){
-	delay(5100);
+	/*This function reads the RTC hours by writing the byte to be read and then using a repeated start and
+		 * specifying you are reading the byte previously specified and then applies a mask to verify if
+		 * the hour read is in 24/12 format and then a applies another mask if it has a 12 hour format to see
+		 * and finally it returns the chars for AM or PM.
+		 * Before that it has to be in TX mode and it has to specify the I2C to be used as a slave.
+		 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
+	delay(DELAYSTART);
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(HOUR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(100);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -371,28 +421,30 @@ uint16 getAMPM_RTC(void){
 }
 
 void setTime_RTC(uint8 hour,uint8 minute,uint8 sec, Format_Type format, AMPM_Type ampm){
+	/*This function writes the RTC time by accessing the hours, minutes and seconds byte as specified before
+	 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
 
 	one = sec & ONES_MASK;
 	ten = sec & TENS_MASK;
 
 	I2C_TX_RX_Mode(TRUE,I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(SEC_BYTE,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(ten | one,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -403,22 +455,22 @@ void setTime_RTC(uint8 hour,uint8 minute,uint8 sec, Format_Type format, AMPM_Typ
 
 	I2C_TX_RX_Mode(TRUE,I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(MIN_BYTE,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(ten | one,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -440,22 +492,22 @@ void setTime_RTC(uint8 hour,uint8 minute,uint8 sec, Format_Type format, AMPM_Typ
 
 	I2C_TX_RX_Mode(TRUE,I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(HOUR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(ten | one,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -463,31 +515,33 @@ void setTime_RTC(uint8 hour,uint8 minute,uint8 sec, Format_Type format, AMPM_Typ
 
 }
 
+
 void setDate_RTC(uint8 year,uint8 month,uint8 day){
 
-	//En esta función los valores tienen que llegar en formato hexadecimal
+	/*This function writes the RTC time by accessing the years, months and days byte as specified before
+	 * Once it has done all its processing, it checks if the oscillator is running and wait until it's stopped*/
 
 	one = day & ONES_MASK;
 	ten = day & ONE_TEN_MASK;
 
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(DAY_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(ten | one, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -498,22 +552,22 @@ void setDate_RTC(uint8 year,uint8 month,uint8 day){
 
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(MTH_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(ten | one, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -524,22 +578,22 @@ void setDate_RTC(uint8 year,uint8 month,uint8 day){
 
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(YEAR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
-	I2C_write_Byte(ten | one, I2C_0); //activar el oscilador 0x10000000
+	I2C_write_Byte(ten | one, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
@@ -548,30 +602,33 @@ void setDate_RTC(uint8 year,uint8 month,uint8 day){
 }
 
 void checkOSCRUN_RTC(void){
+	/*This function checks if the oscillator is still running by checking the OSCRUN bit
+	 * in the RTC weekday byte, and it also stops the I2C*/
+
 	I2C_repeted_Start(I2C_0);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WK_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 }
@@ -580,30 +637,30 @@ void setHourFormat_RTC(Format_Type format){
 
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(HOUR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_repeted_Start(I2C_0);
 	I2C_write_Byte(READRTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_TX_RX_Mode(FALSE, I2C_0);
 
 	I2C_NACK(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 	I2C_wait(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
@@ -612,8 +669,8 @@ void setHourFormat_RTC(Format_Type format){
 		one = (dataRTC & ONES_MASK);
 		ten = (dataRTC & ONE_TEN_MASK) >> TENS_SHIFT;
 
-		if(ten*TENS+one > 12){
-			setHourResult = (ten * TENS + one) % 12;
+		if(ten*TENS+one > TWELVEHOUR){
+			setHourResult = (ten * TENS + one) % TWELVEHOUR;
 			ampm = PM;
 		}
 		else{
@@ -631,26 +688,26 @@ void setHourFormat_RTC(Format_Type format){
 		else if (PM == ampm){
 			one = (dataRTC & ONES_MASK);
 			ten = (dataRTC & TWELVE_MASK) >> TENS_SHIFT;
-			setHourResult = (ten * TENS + one) + 14;
+			setHourResult = (ten * TENS + one) + CONVERSIONOFFSET;
 		}
 	}
 
-	ten = (setHourResult / 12) << TENS_SHIFT;
-	one = (setHourResult % 12);
+	ten = (setHourResult / TWELVEHOUR) << TENS_SHIFT;
+	one = (setHourResult % TWELVEHOUR);
 
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(WRITERTC, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	I2C_write_Byte(HOUR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	if(FORMAT24 == format){
 		I2C_write_Byte(ten | one, I2C_0);
@@ -665,7 +722,7 @@ void setHourFormat_RTC(Format_Type format){
 	}
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
-	delay(400);
+	delay(DELAYI2C);
 
 	checkOSCRUN_RTC();
 
