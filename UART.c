@@ -14,16 +14,16 @@
 #define BDH_SBR_MASK 11111
 #define UARTBR_SBR_MASK 1111100000000
 #define UARTBR_SBR_SHIFT 7
-#define DeleteKeyPress 8
-#define MinNumericAscii 48
-#define OffsetToHexAscii 55
-#define MaxNumericAscii 57
-#define MaxHexAscii 70
-#define MinHexAscii 65
-#define MoveOneStep 1
-#define InitialValue 0
-#define EnterKeyPress 13
-#define Memory 20
+#define DELETE_KEY_PRESS 8
+#define MIN_NUM_ASCII 48
+#define OFSSET_HEX_ASCII 55
+#define MAX_NUM_ASCII 57
+#define MAX_HEX_ASCII 70
+#define MIN_HEX_ASCII 65
+#define MOVE_ONE_STEP 1
+#define INIT_VALUE 0
+#define ENTER_KEY_PRESS 13
+#define MEMORY 20
 uint8 SaveValue = 0;
 uint8 Value = 0;
 uint8 CMatrix = 0;
@@ -181,11 +181,11 @@ void UART_putString(UART_ChannelType uartChannel, sint8 *string){
 }
 
 uint32 *Uart_Text_To_Read(uint8 Max){
-	CMatrix = InitialValue;
-	uint8 Contador = Max - MoveOneStep;
+	CMatrix = INIT_VALUE;
+	uint8 Contador = Max - MOVE_ONE_STEP;
 	uint32 MemoryToSearch[Max];
 	uint32 *Apuntador;
-	while(!(CMatrix == Max) && Value != EnterKeyPress)
+	while(!(CMatrix == Max) && Value != ENTER_KEY_PRESS)
 	{
 		if(UART0_MailBox.flag)
 			{
@@ -193,36 +193,36 @@ uint32 *Uart_Text_To_Read(uint8 Max){
 				UART_putChar (UART_0, UART0_MailBox.mailBox);
 				Value = UART0->D;
 
-				if(CMatrix != Max && Value != DeleteKeyPress && Value != EnterKeyPress)
+				if(CMatrix != Max && Value != DELETE_KEY_PRESS && Value != ENTER_KEY_PRESS)
 				{
 					MemoryToSearch[CMatrix] = Value;
 					SaveValue |= MemoryToSearch[CMatrix] << Contador;
-					Value = InitialValue;
-					CMatrix = CMatrix + MoveOneStep;
-					Contador = Contador - MoveOneStep;
-				}else if(Value == DeleteKeyPress)
+					Value = INIT_VALUE;
+					CMatrix = CMatrix + MOVE_ONE_STEP;
+					Contador = Contador - MOVE_ONE_STEP;
+				}else if(Value == DELETE_KEY_PRESS)
 				{
-					CMatrix = CMatrix - MoveOneStep;
-					Contador = Contador + MoveOneStep;
-					Value = InitialValue;
+					CMatrix = CMatrix - MOVE_ONE_STEP;
+					Contador = Contador + MOVE_ONE_STEP;
+					Value = INIT_VALUE;
 				}
 
 				/**clear the reception flag*/
-				UART0_MailBox.flag = InitialValue;
+				UART0_MailBox.flag = INIT_VALUE;
 			}
 	}
 	Apuntador = MemoryToSearch;
 	MaxValueNumber(CMatrix);
-	Value = InitialValue;
+	Value = INIT_VALUE;
 	return Apuntador;
 }
 
 uint32 *Uart_Writing_Address(uint8 Max){
 	uint32 *Apuntador;
-	CMatrix = InitialValue;
-	uint8 Contador = Max - MoveOneStep;
+	CMatrix = INIT_VALUE;
+	uint8 Contador = Max - MOVE_ONE_STEP;
 	uint32 MemoryToSearch[Max];
-	while(!(CMatrix == Max) && Value != EnterKeyPress)
+	while(!(CMatrix == Max) && Value != ENTER_KEY_PRESS)
 	{
 		if(UART0_MailBox.flag)
 			{
@@ -231,46 +231,46 @@ uint32 *Uart_Writing_Address(uint8 Max){
 				Value = UART0->D;
 
 
-				if(CMatrix != Max && Value >= MinNumericAscii && Value <= MaxNumericAscii)
+				if(CMatrix != Max && Value >= MIN_NUM_ASCII && Value <= MAX_NUM_ASCII)
 				{
 					MemoryToSearch[CMatrix] = Value;
 					SaveValue += MemoryToSearch[CMatrix]<<Contador;
-					Value = InitialValue;
-					CMatrix = CMatrix + MoveOneStep;
-					Contador = Contador - MoveOneStep;
-				}else if (Value == DeleteKeyPress)
+					Value = INIT_VALUE;
+					CMatrix = CMatrix + MOVE_ONE_STEP;
+					Contador = Contador - MOVE_ONE_STEP;
+				}else if (Value == DELETE_KEY_PRESS)
 				{
-					CMatrix = CMatrix - MoveOneStep;
-					Contador = Contador + MoveOneStep;
-					Value = InitialValue;
-				}else if (Value >= MinHexAscii && Value <= MaxHexAscii)
+					CMatrix = CMatrix - MOVE_ONE_STEP;
+					Contador = Contador + MOVE_ONE_STEP;
+					Value = INIT_VALUE;
+				}else if (Value >= MIN_HEX_ASCII && Value <= MAX_HEX_ASCII)
 				{
-					Value -= OffsetToHexAscii;
+					Value -= OFSSET_HEX_ASCII;
 					MemoryToSearch[CMatrix] = Value;
 					SaveValue += MemoryToSearch[CMatrix]<<Contador;
-					Value = InitialValue;
-					CMatrix = CMatrix + MoveOneStep;
-					Contador = Contador - MoveOneStep;
+					Value = INIT_VALUE;
+					CMatrix = CMatrix + MOVE_ONE_STEP;
+					Contador = Contador - MOVE_ONE_STEP;
 				}
 				else
 				{
 					UART_putString(UART_0,"\033[1D");
 				}
-					UART0_MailBox.flag = InitialValue;
+					UART0_MailBox.flag = INIT_VALUE;
 				}
 			}
 	Apuntador = MemoryToSearch;
 	MaxValueNumber(CMatrix);
-	Value = InitialValue;
+	Value = INIT_VALUE;
 	return Apuntador;
 }
 
 uint32 *Uart_Reading_Bytes_Address(uint8 Max){
-	uint32 MemoryToSearch[Memory];
-	CMatrix = InitialValue;
-	uint8 Contador = Max - MoveOneStep;
+	uint32 MemoryToSearch[MEMORY];
+	CMatrix = INIT_VALUE;
+	uint8 Contador = Max - MOVE_ONE_STEP;
 	uint32 *Apuntador;
-	while(!(CMatrix == Max) && Value != EnterKeyPress)
+	while(!(CMatrix == Max) && Value != ENTER_KEY_PRESS)
 	{
 		if(UART0_MailBox.flag)
 			{
@@ -279,55 +279,55 @@ uint32 *Uart_Reading_Bytes_Address(uint8 Max){
 				Value = UART0->D;
 
 
-				if(CMatrix != Max && Value >= MinNumericAscii && Value <= MaxNumericAscii)
+				if(CMatrix != Max && Value >= MIN_NUM_ASCII && Value <= MAX_NUM_ASCII)
 				{
 					MemoryToSearch[CMatrix] = Value;
 					SaveValue += MemoryToSearch[CMatrix]<<Contador;
-					Value = InitialValue;
-					CMatrix = CMatrix + MoveOneStep;
-					Contador = Contador - MoveOneStep;
-				}else if (Value == DeleteKeyPress)
+					Value = INIT_VALUE;
+					CMatrix = CMatrix + MOVE_ONE_STEP;
+					Contador = Contador - MOVE_ONE_STEP;
+				}else if (Value == DELETE_KEY_PRESS)
 				{
-					CMatrix = CMatrix - MoveOneStep;
-					Contador = Contador + MoveOneStep;
-					Value = InitialValue;
-				}else if (Value >= MinHexAscii && Value <= MaxHexAscii)
+					CMatrix = CMatrix - MOVE_ONE_STEP;
+					Contador = Contador + MOVE_ONE_STEP;
+					Value = INIT_VALUE;
+				}else if (Value >= MIN_HEX_ASCII && Value <= MAX_HEX_ASCII)
 				{
-					Value -= OffsetToHexAscii;
+					Value -= OFSSET_HEX_ASCII;
 					MemoryToSearch[CMatrix] = Value;
 					SaveValue += MemoryToSearch[CMatrix]<<Contador;
-					Value = InitialValue;
-					CMatrix = CMatrix + MoveOneStep;
-					Contador = Contador - MoveOneStep;
+					Value = INIT_VALUE;
+					CMatrix = CMatrix + MOVE_ONE_STEP;
+					Contador = Contador - MOVE_ONE_STEP;
 				}
 				else
 				{
 					UART_putString(UART_0,"\033[1D");
 				}
-					UART0_MailBox.flag = InitialValue;
+					UART0_MailBox.flag = INIT_VALUE;
 				}
 			}
 	Apuntador = MemoryToSearch;
 	MaxValueNumber(CMatrix);
-	Value = InitialValue;
+	Value = INIT_VALUE;
 	return Apuntador;
 }
 
 uint8 InitMenu()
 {
-	uint8 Flag = 0;
+	uint8 Flag = INIT_VALUE;
 	FirstMenu();
-	while(Flag == 0)
+	while(Flag == INIT_VALUE)
 	{
 		if(UART0_MailBox.flag)
 		{
 			UART_putChar (UART_0, UART0_MailBox.mailBox);
 			Flag = UART0->D;
-			if(Flag >= 49 && Flag <= 57)
+			if(Flag >= (MIN_NUM_ASCII - MOVE_ONE_STEP) && Flag <= MAX_NUM_ASCII)
 			{
 			}else
 			{
-				Flag = 0;
+				Flag = INIT_VALUE;
 				FirstMenu();
 			}
 			}
@@ -338,11 +338,11 @@ uint8 InitMenu()
 }
 
 uint32 *Uart_setTime_Get(uint8 Max){
-	uint32 MemoryToSearch[Memory];
-	CMatrix = InitialValue;
-	uint8 Contador = Max - MoveOneStep;
+	uint32 MemoryToSearch[MEMORY];
+	CMatrix = INIT_VALUE;
+	uint8 Contador = Max - MOVE_ONE_STEP;
 	uint32 *Apuntador;
-	uint8 TwoPointsCounter = 0;
+	uint8 TwoPointsCounter = INIT_VALUE;
 	while(CMatrix != Max )
 	{
 		if(UART0_MailBox.flag)
@@ -354,51 +354,83 @@ uint32 *Uart_setTime_Get(uint8 Max){
 				{
 					UART_putString(UART_0,"\033[1C");
 				}
-				if(Value >= MinNumericAscii && Value <= MaxNumericAscii)
+				if(Value >= MIN_NUM_ASCII && Value <= MAX_NUM_ASCII)
 				{
-					TwoPointsCounter += 1;
+					TwoPointsCounter += MOVE_ONE_STEP;
 					MemoryToSearch[CMatrix] = Value;
 					SaveValue += MemoryToSearch[CMatrix] << Contador;
-					Value = InitialValue;
-					CMatrix = CMatrix + MoveOneStep;
-					Contador = Contador - MoveOneStep;
-				}else if (Value == DeleteKeyPress)
+					Value = INIT_VALUE;
+					CMatrix = CMatrix + MOVE_ONE_STEP;
+					Contador = Contador - MOVE_ONE_STEP;
+				}else if (Value == DELETE_KEY_PRESS)
 				{
-					CMatrix = CMatrix - MoveOneStep;
-					Contador = Contador + MoveOneStep;
+					CMatrix = CMatrix - MOVE_ONE_STEP;
+					Contador = Contador + MOVE_ONE_STEP;
 					if(TwoPointsCounter == 2 || TwoPointsCounter == 4)
 					{
-					UART_putString(UART_0,"\033[1D");
+						UART_putString(UART_0,"\033[1D");
 					}else{
-					UART_putString(UART_0,"\033[1D");
+						UART_putString(UART_0,"\033[1D");
 					}
-					TwoPointsCounter -= 1;
-					Value = InitialValue;
+					TwoPointsCounter -= MOVE_ONE_STEP;
+					Value = INIT_VALUE;
 				}else
 				{
 					UART_putString(UART_0,"\033[1D");
 				}
-					UART0_MailBox.flag = InitialValue;
+					UART0_MailBox.flag = INIT_VALUE;
 				}
 			}
 	Apuntador = MemoryToSearch;
 	MaxValueNumber(CMatrix);
-	Value = InitialValue;
+	Value = INIT_VALUE;
 	return Apuntador;
 }
 
 uint8 Uart_For_Enter()
 {
-	uint8 Flag = 0;
+	uint8 Flag = INIT_VALUE;
 	if(UART0_MailBox.flag)
 	{
-	UART_putChar (UART_0, UART0_MailBox.mailBox);
-	Flag = UART0->D;
-	if(Flag == 13)
-	{
-
-	}
-	UART0_MailBox.flag =0;
+		UART_putChar (UART_0, UART0_MailBox.mailBox);
+		Flag = UART0->D;
+	if(Flag == ENTER_KEY_PRESS)
+	{}
+	UART0_MailBox.flag = INIT_VALUE;
 	}
 	return Flag;
+}
+
+uint8 Uart_For_Yes_Or_No()
+{
+	uint8 Counter = 0;
+	uint8 YesOrNo[2] = {0,0};
+	while(TRUE)
+	{
+	if(UART0_MailBox.flag)
+	{
+		UART_putChar (UART_0, UART0_MailBox.mailBox);
+		YesOrNo[Counter] = UART0->D;
+		Counter += 1;
+		if (Counter == 2 )
+		{
+			if(YesOrNo[0] == 115 && YesOrNo[1] == 105)
+			{
+				UART0_MailBox.flag = INIT_VALUE;
+				return TRUE;
+			}else if(YesOrNo[0] == 110 && YesOrNo[1] == 111)
+			{
+				UART0_MailBox.flag = INIT_VALUE;
+				return FALSE;
+			}else
+			{
+				Counter -= 2;
+				UART_putString(UART_0,"\033[4;0H");
+				YesOrNo[0] = FALSE;
+				YesOrNo[1] = FALSE;
+			}
+		}
+	UART0_MailBox.flag = INIT_VALUE;
+	}
+	}
 }

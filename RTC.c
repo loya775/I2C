@@ -547,13 +547,42 @@ void setDate_RTC(uint8 year,uint8 month,uint8 day){
 
 }
 
+void checkOSCRUN_RTC(void){
+	I2C_repeted_Start(I2C_0);
+
+	I2C_write_Byte(WRITERTC, I2C_0);
+	I2C_wait(I2C_0);
+	I2C_get_ACK(I2C_0);
+	delay(400);
+
+	I2C_write_Byte(WK_BYTE, I2C_0);
+	I2C_wait(I2C_0);
+	I2C_get_ACK(I2C_0);
+	delay(400);
+
+	I2C_repeted_Start(I2C_0);
+	I2C_write_Byte(READRTC, I2C_0);
+	I2C_wait(I2C_0);
+	I2C_get_ACK(I2C_0);
+	delay(400);
+
+	I2C_TX_RX_Mode(FALSE, I2C_0);
+
+	I2C_NACK(I2C_0);
+	dataRTC = I2C_read_Byte(I2C_0);
+	I2C_wait(I2C_0);
+	delay(400);
+
+	I2C_stop(I2C_0);
+}
+
 void setHourFormat_RTC(Format_Type format){
 
 	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
 	delay(400);
 
-	I2C_write_Byte(WRITERTC, I2C_0);
+	I2C_write_Byte(WRITERTC,I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
 	delay(400);
@@ -593,9 +622,11 @@ void setHourFormat_RTC(Format_Type format){
 
 		if(ten*TENS+one > 12){
 			setHourResult = (ten * TENS + one) % 12;
+			ampm = PM;
 		}
 		else{
 			setHourResult = ten * TENS + one;
+			ampm = AM;
 		}
 	}
 	else if(FORMAT12 == ((dataRTC & HOUR_FORMAT_MASK) >> HOUR_SHIFT)){
@@ -615,6 +646,7 @@ void setHourFormat_RTC(Format_Type format){
 	ten = (setHourResult / 12) << TENS_SHIFT;
 	one = (setHourResult % 12);
 
+	I2C_TX_RX_Mode(TRUE, I2C_0);
 	I2C_start(I2C_0);
 	delay(400);
 
@@ -623,7 +655,7 @@ void setHourFormat_RTC(Format_Type format){
 	I2C_get_ACK(I2C_0);
 	delay(400);
 
-	I2C_write_Byte(HOUR_BYTE,I2C_0);
+	I2C_write_Byte(HOUR_BYTE, I2C_0);
 	I2C_wait(I2C_0);
 	I2C_get_ACK(I2C_0);
 	delay(400);
@@ -633,10 +665,10 @@ void setHourFormat_RTC(Format_Type format){
 	}
 	else if (FORMAT12 == format){
 		if(AM == ampm){
-			I2C_write_Byte(ten | one, I2C_0);
+			I2C_write_Byte(HOUR_FORMAT_MASK | ten | one, I2C_0);
 		}
 		else if(PM == ampm){
-			I2C_write_Byte(HOUR_FORMAT_MASK | ten | one, I2C_0);
+			I2C_write_Byte(HOUR_FORMAT_MASK | PM_MASK | ten | one, I2C_0);
 		}
 	}
 	I2C_wait(I2C_0);
@@ -648,33 +680,3 @@ void setHourFormat_RTC(Format_Type format){
 	while(TRUE == (dataRTC & OSCRUN_MASK));
 
 }
-
-void checkOSCRUN_RTC(void){
-	I2C_repeted_Start(I2C_0);
-
-	I2C_write_Byte(WRITERTC, I2C_0);
-	I2C_wait(I2C_0);
-	I2C_get_ACK(I2C_0);
-	delay(400);
-
-	I2C_write_Byte(WK_BYTE, I2C_0);
-	I2C_wait(I2C_0);
-	I2C_get_ACK(I2C_0);
-	delay(400);
-
-	I2C_repeted_Start(I2C_0);
-	I2C_write_Byte(READRTC, I2C_0);
-	I2C_wait(I2C_0);
-	I2C_get_ACK(I2C_0);
-	delay(400);
-
-	I2C_TX_RX_Mode(FALSE, I2C_0);
-
-	I2C_NACK(I2C_0);
-	dataRTC = I2C_read_Byte(I2C_0);
-	I2C_wait(I2C_0);
-	delay(400);
-
-	I2C_stop(I2C_0);
-}
-

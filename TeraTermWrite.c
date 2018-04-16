@@ -17,6 +17,7 @@
 #define DefineTime 6
 #define FECHA 8
 uint8 dias;
+uint8 Format = TRUE;
 uint8 diasHigh;
 uint8 diasLow;
 uint8 meses;
@@ -134,7 +135,7 @@ void Establecer_hora(void)
 	Hours = convertValue(0, SetTime);
 	Minute = convertValue(2, SetTime);
 	Seconds = convertValue(4, SetTime) + 0x80;
-	setTime_RTC(Hours, Minute, Seconds, FORMAT24, AM);
+	setTime_RTC(Hours, Minute, Seconds, FORMAT24, PM);
 	//WriteAddress = Uart_Writing_Address(ADDRESS);
 	UART_putString(UART_0,"\033[3;0H");
 	UART_putString(UART_0, "La hora ha sido cambiada:\r");
@@ -174,21 +175,59 @@ void Establecer_fecha(void)
 
 void Formato_Hora()
 {
+	uint8 Change;
 	uint8 Flag1;
-	uint8 Flag2;
-	UART_putString(UART_0,"\033[2J");
-	UART_putString(UART_0,"\033[1;0H");
-	UART_putString(UART_0, "1) El Formato Actual es:\r");
-	UART_putString(UART_0,"\033[2;0H");
-	UART_putString(UART_0, "1) Desea cambiar el formato a:\r");
-	UART_putString(UART_0,"\033[3;0H");
-	UART_putString(UART_0, "1) Si o no:\r");
-	Flag1 = Uart_Writing_Address(MESSAGE);
+	if (Format == TRUE)
+	{
+		UART_putString(UART_0,"\033[2J");
+		UART_putString(UART_0,"\033[1;0H");
+		UART_putString(UART_0, "El Formato Actual es de 24 horas:\r");
+		UART_putString(UART_0,"\033[2;0H");
+		UART_putString(UART_0, "Desea cambiar el formato a 12 horas:\r");
+		UART_putString(UART_0,"\033[3;0H");
+		UART_putString(UART_0, "Si o no:\r");
+		UART_putString(UART_0,"\033[4;0H");
+		Change = Uart_For_Yes_Or_No();
+	}else
+	{
+		UART_putString(UART_0,"\033[2J");
+		UART_putString(UART_0,"\033[1;0H");
+		UART_putString(UART_0, "1) El Formato Actual es de 12 horas:\r");
+		UART_putString(UART_0,"\033[2;0H");
+		UART_putString(UART_0, "1) Desea cambiar el formato a 24 horasa:\r");
+		UART_putString(UART_0,"\033[3;0H");
+		UART_putString(UART_0, "1) Si o no:\r");
+		Change = Uart_For_Yes_Or_No();
+	}
 
-	if(Flag1 != 0)
+	if(Format == TRUE && Change == TRUE)
+	{
+		setHourFormat_RTC(FORMAT12);
+		Format = FALSE;
+		UART_putString(UART_0,"\033[3;0H");
+		UART_putString(UART_0, "El formato ha sido cambiado\r");
+		while(Flag1 != 13)
+		{
+			UART_putString(UART_0,"\033[4;0H");
+			Flag1 = Uart_For_Enter();
+		}
+	}else if(Format == FALSE && Change == TRUE)
 	{
 		UART_putString(UART_0,"\033[3;0H");
 		UART_putString(UART_0, "El formato ha sido cambiado\r");
+		setHourFormat_RTC(FORMAT24);
+		Format = TRUE;
+		while(Flag1 != 13)
+		{
+			Flag1 = Uart_For_Enter();
+		}
+	}
+	UART_putString(UART_0,"\033[3;0H");
+	UART_putString(UART_0, "El formato no ha sido cambiado\r");
+	while(Flag1 != 13)
+	{
+		UART_putString(UART_0,"\033[4;0H");
+		Flag1 = Uart_For_Enter();
 	}
 
 }
@@ -298,4 +337,9 @@ void WriteHour()
 	segundos = getSeconds_RTC();
 	segundos = (segundos > 4)*10;
 	segundos += (segundos & 0xF);
+}
+
+uint8 getFormat()
+{
+	return Format;
 }

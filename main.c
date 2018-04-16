@@ -49,6 +49,8 @@
 #define Hora 0x15
 #define Min 0x20
 #define seg 0x95
+#define OFFSET_FOR_ASCII 49
+#define Clock 21000000
 
 int main(void) {
 	uint8 Selector = 0;
@@ -60,7 +62,7 @@ int main(void) {
 	/**Configures the pin control register of pin16 in PortB as UART TX*/
 	GPIO_pinControlRegister(GPIO_B,BIT17, &MUXALT);
 	/**Configures UART 0 to transmit/receive at 11520 bauds with a 21 MHz of clock core*/
-	UART_init (UART_0,  21000000, BD_115200);
+	UART_init (UART_0,  Clock, BD_115200);
 	//printf("UART is configured");
 	/**Enables the UART 0 interrupt*/
 	UART0_interruptEnable(UART_0);
@@ -70,12 +72,13 @@ int main(void) {
 
 	/**Enables interrupts*/
 	EnableInterrupts;
-	setTime_RTC(Hora, Min, seg, FORMAT24, AM);
+	setHourFormat_RTC(FORMAT24);
+	setTime_RTC(Hora, Min, seg, FORMAT24, PM);
 	setDate_RTC(Ano, Mes, Dia);
 	while(TRUE)
 	{
 		Selector = InitMenu();
-		Selector -= 49;
+		Selector -= OFFSET_FOR_ASCII;
 		choose_function(Selector);
 	}
 }

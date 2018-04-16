@@ -29,4 +29,5 @@ void WriteHour(void);
 void Formato_Hora(void);
 void Leer_Fecha(void);
 void Leer_Hora(void);
+uint8 getFormat();
 #endif /* TERATERMWRITE_H_ */

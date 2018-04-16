@@ -96,4 +96,5 @@ uint32 *Uart_Reading_Bytes_Address(uint8 Max);
 uint8 InitMenu();
 uint32 *Uart_setTime_Get(uint8 Max);
 uint8 Uart_For_Enter();
+uint8 Uart_For_Yes_Or_No();
 #endif /* UART_H_ */
