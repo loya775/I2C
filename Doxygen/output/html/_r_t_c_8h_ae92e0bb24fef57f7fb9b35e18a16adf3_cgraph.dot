@@ -1,0 +1,31 @@
+digraph "RTC_initialize"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node71 [label="RTC_initialize",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node71 -> Node72 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node72 [label="I2C_TX_RX_Mode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a6a531e51c74e4d9ecf32f086aef3259f",tooltip="It selects between transmitter mode or receiver mode. "];
+  Node71 -> Node73 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node73 [label="I2C_start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a09d9820de1e99617f206ef60a9a9d2e8",tooltip="Generates the start signal. When MST bit is changed from 0 to 1, a START signal is generated on the b..."];
+  Node71 -> Node74 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node74 [label="I2C_write_Byte",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#ad6927c971148447061c3f950362beada",tooltip="It writes the data to be transmitted into the transmission buffer. When you want to write a value int..."];
+  Node71 -> Node75 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node75 [label="I2C_wait",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a05143bfcf3eeb04ec1dfc7e4ab952689",tooltip="Indicates the status of the bus regardless of slave or master mode. Internally checks the busy bit in..."];
+  Node71 -> Node76 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node76 [label="I2C_get_ACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a2978351c0f1c3e3057fffc151b097ed8",tooltip="Indicates if the acknowledge was received. "];
+  Node71 -> Node77 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node77 [label="delay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_global_functions_8c.html#aa7fa622ced5687f8351d589e9402b251"];
+  Node77 -> Node77 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node71 -> Node78 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 [label="checkOSCRUN_RTC",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_r_t_c_8c.html#a9ab8a7a10de657b3307670dee4f76ae8",tooltip="This function waits until the oscillator has stopped by checking the OSCRUN bit in the weekday byte o..."];
+  Node78 -> Node79 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node79 [label="I2C_repeted_Start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a577158ebfa27fcb673a5727e95d2d853",tooltip="It generates a repeated start that is needed when master reads data. "];
+  Node78 -> Node74 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 -> Node75 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 -> Node76 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 -> Node77 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 -> Node72 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node78 -> Node80 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node80 [label="I2C_NACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#aae489f3896588f59173688541155aa32",tooltip="It generates the Not ACKnowledge that is needed when the master reads data. "];
+}

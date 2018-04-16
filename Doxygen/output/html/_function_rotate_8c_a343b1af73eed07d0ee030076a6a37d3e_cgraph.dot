@@ -1,0 +1,39 @@
+digraph "Menu_Function5"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node51 [label="Menu_Function5",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node51 -> Node52 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node52 [label="Formato_Hora",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_tera_term_write_8c.html#aac90f3b4f7ea600332ada5e3b720bc9c",tooltip="This function Prints the establish date menu. "];
+  Node52 -> Node53 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node53 [label="UART_putString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#af95ee594ce5f1619abbe4f2393b1903e",tooltip="It sends a string character through the serial port. "];
+  Node53 -> Node54 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node54 [label="UART_putChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#ae69fe2846b6410c22876356a9b3f0083",tooltip="It sends one character through the serial port. This function should include the next sentence: while..."];
+  Node52 -> Node55 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node55 [label="Uart_For_Yes_Or_No",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#a8a0aa6f7a2c11ec130dcb0279ac31fb5",tooltip="Waits until the function capture a si or no in ascii. "];
+  Node55 -> Node54 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node55 -> Node53 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node52 -> Node56 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node56 [label="setHourFormat_RTC",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_r_t_c_8c.html#ad25859809cb0365904b677fecfafb59c",tooltip="This function converts the current time into the format specified. "];
+  Node56 -> Node57 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node57 [label="I2C_TX_RX_Mode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a6a531e51c74e4d9ecf32f086aef3259f",tooltip="It selects between transmitter mode or receiver mode. "];
+  Node56 -> Node58 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node58 [label="I2C_start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a09d9820de1e99617f206ef60a9a9d2e8",tooltip="Generates the start signal. When MST bit is changed from 0 to 1, a START signal is generated on the b..."];
+  Node56 -> Node59 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node59 [label="delay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_global_functions_8c.html#aa7fa622ced5687f8351d589e9402b251"];
+  Node59 -> Node59 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node56 -> Node60 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node60 [label="I2C_write_Byte",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#ad6927c971148447061c3f950362beada",tooltip="It writes the data to be transmitted into the transmission buffer. When you want to write a value int..."];
+  Node56 -> Node61 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node61 [label="I2C_wait",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a05143bfcf3eeb04ec1dfc7e4ab952689",tooltip="Indicates the status of the bus regardless of slave or master mode. Internally checks the busy bit in..."];
+  Node56 -> Node62 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node62 [label="I2C_get_ACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a2978351c0f1c3e3057fffc151b097ed8",tooltip="Indicates if the acknowledge was received. "];
+  Node56 -> Node63 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node63 [label="I2C_repeted_Start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a577158ebfa27fcb673a5727e95d2d853",tooltip="It generates a repeated start that is needed when master reads data. "];
+  Node56 -> Node64 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node64 [label="I2C_NACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#aae489f3896588f59173688541155aa32",tooltip="It generates the Not ACKnowledge that is needed when the master reads data. "];
+  Node52 -> Node65 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node65 [label="Uart_For_Enter",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#a8e08107965502921e7246be967f7cc88",tooltip="This function waits for an enter in TeraTerm . "];
+  Node65 -> Node54 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

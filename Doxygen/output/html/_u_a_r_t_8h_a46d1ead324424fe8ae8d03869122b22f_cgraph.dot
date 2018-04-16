@@ -1,0 +1,14 @@
+digraph "InitMenu"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="InitMenu",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node0 -> Node1 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="FirstMenu",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_tera_term_write_8c.html#ad38dc59a6f7a64288fb468dde2f10178",tooltip="This function Prints the first Menu . "];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="UART_putString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#af95ee594ce5f1619abbe4f2393b1903e",tooltip="It sends a string character through the serial port. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="UART_putChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#ae69fe2846b6410c22876356a9b3f0083",tooltip="It sends one character through the serial port. This function should include the next sentence: while..."];
+  Node0 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

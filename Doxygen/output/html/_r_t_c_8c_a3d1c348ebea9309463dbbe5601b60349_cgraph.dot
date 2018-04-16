@@ -1,0 +1,24 @@
+digraph "getDays_RTC"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node17 [label="getDays_RTC",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node17 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="I2C_TX_RX_Mode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a6a531e51c74e4d9ecf32f086aef3259f",tooltip="It selects between transmitter mode or receiver mode. "];
+  Node17 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="delay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_global_functions_8c.html#aa7fa622ced5687f8351d589e9402b251"];
+  Node19 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 -> Node20 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node20 [label="I2C_start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a09d9820de1e99617f206ef60a9a9d2e8",tooltip="Generates the start signal. When MST bit is changed from 0 to 1, a START signal is generated on the b..."];
+  Node17 -> Node21 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="I2C_write_Byte",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#ad6927c971148447061c3f950362beada",tooltip="It writes the data to be transmitted into the transmission buffer. When you want to write a value int..."];
+  Node17 -> Node22 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="I2C_wait",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a05143bfcf3eeb04ec1dfc7e4ab952689",tooltip="Indicates the status of the bus regardless of slave or master mode. Internally checks the busy bit in..."];
+  Node17 -> Node23 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node23 [label="I2C_get_ACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a2978351c0f1c3e3057fffc151b097ed8",tooltip="Indicates if the acknowledge was received. "];
+  Node17 -> Node24 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node24 [label="I2C_repeted_Start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a577158ebfa27fcb673a5727e95d2d853",tooltip="It generates a repeated start that is needed when master reads data. "];
+  Node17 -> Node25 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node25 [label="I2C_NACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#aae489f3896588f59173688541155aa32",tooltip="It generates the Not ACKnowledge that is needed when the master reads data. "];
+}

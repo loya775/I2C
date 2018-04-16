@@ -1,0 +1,11 @@
+digraph "I2C_init"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node2 [label="I2C_init",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="GPIO_clockGating",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g_p_i_o_8c.html#a621b0dc3536c64501a7a6c560b667355",tooltip="This function enables the GPIO clock by configuring the corresponding bit and register in the System ..."];
+  Node2 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="GPIO_pinControlRegister",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_g_p_i_o_8c.html#ab7610a9d041c1c33f8a3fbf348bf80ef"];
+}

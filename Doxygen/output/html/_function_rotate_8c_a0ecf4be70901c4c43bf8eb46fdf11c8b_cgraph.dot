@@ -1,0 +1,48 @@
+digraph "Menu_Function1"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="Menu_Function1",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="ReadMemoryMenu",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_tera_term_write_8c.html#a87fe7ed6d2fead81929ab082831f9a85",tooltip="This function prints the Read Memory Menu. "];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="UART_putString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#af95ee594ce5f1619abbe4f2393b1903e",tooltip="It sends a string character through the serial port. "];
+  Node3 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="UART_putChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#ae69fe2846b6410c22876356a9b3f0083",tooltip="It sends one character through the serial port. This function should include the next sentence: while..."];
+  Node2 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="Uart_Writing_Address",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#aeb29ecd89b18d960862a15b78c28180a",tooltip="This function capture the address in an array to write or read dependying of the menu you are..."];
+  Node5 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="MaxValueNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_e_e_p_r_o_m_8c.html#a4c1d488b4c8035a099f87b27c731a217",tooltip="This function puts a value in our global variable call MAX. "];
+  Node2 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="Uart_Reading_Bytes\l_Address",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#a0ed50f7e96316c27305c3ec2bb4f8180",tooltip="This function capture the number of bites you wanna write in the memory. "];
+  Node7 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 -> Node6 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 -> Node8 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="EEPROM_Read",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_e_e_p_r_o_m_8c.html#a0a9f4a202f21b2bda52010a3d4b60fa5",tooltip="This function Reads a number of bits depending in the direction you put. "];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="delay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_global_functions_8c.html#aa7fa622ced5687f8351d589e9402b251"];
+  Node9 -> Node9 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="I2C_start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a09d9820de1e99617f206ef60a9a9d2e8",tooltip="Generates the start signal. When MST bit is changed from 0 to 1, a START signal is generated on the b..."];
+  Node8 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="I2C_write_Byte",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#ad6927c971148447061c3f950362beada",tooltip="It writes the data to be transmitted into the transmission buffer. When you want to write a value int..."];
+  Node8 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="I2C_wait",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a05143bfcf3eeb04ec1dfc7e4ab952689",tooltip="Indicates the status of the bus regardless of slave or master mode. Internally checks the busy bit in..."];
+  Node8 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="I2C_get_ACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a2978351c0f1c3e3057fffc151b097ed8",tooltip="Indicates if the acknowledge was received. "];
+  Node8 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="I2C_repeted_Start",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a577158ebfa27fcb673a5727e95d2d853",tooltip="It generates a repeated start that is needed when master reads data. "];
+  Node8 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="I2C_TX_RX_Mode",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a6a531e51c74e4d9ecf32f086aef3259f",tooltip="It selects between transmitter mode or receiver mode. "];
+  Node8 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="I2C_NACK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#aae489f3896588f59173688541155aa32",tooltip="It generates the Not ACKnowledge that is needed when the master reads data. "];
+  Node8 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="I2C_read_Byte",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a689c3512503f9420b3d4fcd32ad6585f",tooltip="It reads data from the receiving buffer. "];
+  Node8 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="I2C_stop",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_i2_c___driver_8c.html#a0635b74679cdb09c91ef36aa4181a911",tooltip="Generates the stop signal. When this bit changes from 1 to 0, a STOP signal is generated and the mode..."];
+  Node8 -> Node4 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

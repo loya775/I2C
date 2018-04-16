@@ -1,0 +1,11 @@
+digraph "FirstMenu"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node17 [label="FirstMenu",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node17 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="UART_putString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#af95ee594ce5f1619abbe4f2393b1903e",tooltip="It sends a string character through the serial port. "];
+  Node18 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node19 [label="UART_putChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#ae69fe2846b6410c22876356a9b3f0083",tooltip="It sends one character through the serial port. This function should include the next sentence: while..."];
+}

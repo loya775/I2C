@@ -1,0 +1,26 @@
+digraph "Establecer_hora"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node9 [label="Establecer_hora",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="UART_putString",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#af95ee594ce5f1619abbe4f2393b1903e",tooltip="It sends a string character through the serial port. "];
+  Node10 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="UART_putChar",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#ae69fe2846b6410c22876356a9b3f0083",tooltip="It sends one character through the serial port. This function should include the next sentence: while..."];
+  Node9 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="Uart_setTime_Get",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#a455642284fc8f2282f9bfc8dbb30a1bb",tooltip="This function capture the hour or date you wanna write in the RTC. "];
+  Node12 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="MaxValueNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_e_e_p_r_o_m_8c.html#a4c1d488b4c8035a099f87b27c731a217",tooltip="This function puts a value in our global variable call MAX. "];
+  Node9 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="convertValue",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_tera_term_write_8c.html#a293d27cb97527a256f136ddbef9462d3",tooltip="This function reads all the GPIO port. "];
+  Node9 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="setTime_RTC",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_r_t_c_8c.html#afdac47cf1579b183b16a6b7d46c533f1",tooltip="This function writes the time received in the RTC hour, minute, and seconds byte. ..."];
+  Node9 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="Uart_Writing_Address",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$_u_a_r_t_8c.html#aeb29ecd89b18d960862a15b78c28180a",tooltip="This function capture the address in an array to write or read dependying of the menu you are..."];
+  Node16 -> Node11 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 -> Node10 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}
