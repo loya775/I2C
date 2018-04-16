@@ -259,6 +259,19 @@ void Leer_Hora()
 	UART_putChar (UART_0, 58);
 	UART_putChar (UART_0, SegundosHigh+48);
 	UART_putChar (UART_0, SegundosLow+48);
+	if (Format == TRUE)
+	{
+	}else
+	{
+		if(getAMPM_RTC() == 0x616D)
+		{
+		UART_putString(UART_0, "AM");
+		}
+		else if(getAMPM_RTC() == 0x706D)
+		{
+			UART_putString(UART_0, "PM");
+		}
+	}
 	UART_putString(UART_0,"\033[3;0H");
 	UART_putString(UART_0, "Presiona enter para salir\r");
 	Flag1 = Uart_For_Enter();

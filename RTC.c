@@ -608,14 +608,6 @@ void setHourFormat_RTC(Format_Type format){
 	I2C_stop(I2C_0);
 	dataRTC = I2C_read_Byte(I2C_0);
 
-	if(formatFlag == TRUE){
-		dataRTC = lastHour;
-		formatFlag = FALSE;
-	}
-	else if(formatFlag == FALSE){
-		lastHour = dataRTC;
-		formatFlag = TRUE;
-	}
 	if(FORMAT24 == ((dataRTC & HOUR_FORMAT_MASK) >> HOUR_SHIFT)){
 		one = (dataRTC & ONES_MASK);
 		ten = (dataRTC & ONE_TEN_MASK) >> TENS_SHIFT;
@@ -639,7 +631,7 @@ void setHourFormat_RTC(Format_Type format){
 		else if (PM == ampm){
 			one = (dataRTC & ONES_MASK);
 			ten = (dataRTC & TWELVE_MASK) >> TENS_SHIFT;
-			setHourResult = (ten * TENS + one) + 12;
+			setHourResult = (ten * TENS + one) + 14;
 		}
 	}
 
